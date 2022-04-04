@@ -30,18 +30,20 @@
 #include <driver/adc.h>
 #include "esp_adc_cal.h"
 
-#define LED_BUILTIN 33
-#define PIN_LEFT_FORWARD 15
+//#define LED_BUILTIN 33
 
 
-#define PIN_RIGHT_FORWARD 18//16
+#define PIN_RIGHT_FORWARD 13
+#define PIN_LEFT_FORWARD 32
 
 //right
-#define PIN_IN3 21//17//14//17//2
+#define PIN_IN3 23//17//14//17//2
+
 #define PIN_IN4 5//27//5
 
 //left
-#define PIN_IN1 26
+#define PIN_IN1 33
+
 #define PIN_IN2 25//12
 
 
@@ -158,8 +160,8 @@ static bool adc_calibration_init(void)
 void setupPins() {
 
     // Led. Set it to GPIO_MODE_INPUT_OUTPUT, because we want to read back the state we set it to.
-    gpio_reset_pin(LED_BUILTIN);
-    gpio_set_direction(LED_BUILTIN, GPIO_MODE_INPUT_OUTPUT);
+    //gpio_reset_pin(LED_BUILTIN);
+    //gpio_set_direction(LED_BUILTIN, GPIO_MODE_INPUT_OUTPUT);
 
     // Configure timer
     ledc_timer_config_t ledc_timer = {
@@ -229,7 +231,7 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time)
 {
     (void) last_call_time;
 
-     gpio_set_level(LED_BUILTIN, !gpio_get_level(LED_BUILTIN));
+    // gpio_set_level(LED_BUILTIN, !gpio_get_level(LED_BUILTIN));
 
 //	if (timer != NULL) {
 		//RCSOFTCHECK(rcl_publish(&publisher, &send_msg, NULL));
@@ -309,6 +311,8 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time)
         gpio_set_level(PIN_IN2, 0);
         gpio_set_level(PIN_IN3, 0);
         gpio_set_level(PIN_IN4, 0);
+        ledc_set_duty(PWM_MODE, PWM_LEFT_FORWARD, 0);
+        ledc_set_duty(PWM_MODE, PWM_RIGHT_FORWARD, 0);
     }
 
 
